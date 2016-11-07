@@ -1,30 +1,30 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var User = mongoose.model('User');
-var Author = mongoose.model('Author');
+// var User = mongoose.model('User');
+// var Author = mongoose.model('Author');
 
 var postSchema = new mongoose.Schema({
-	_id: Schema.ObjectId,
 	date: {
-		type: String,
-		required: true
+		type: Date, 
+		'default': Date.now
 	},
 	modified: {
-		type: String,
-		required: true
+		type: Date, 
+		'default': Date.now
 	},
 	status: {
-		type: [String],
-		required: true,
-		'default': 'Draft'
-	}
+		type: String,
+		'default': 'draft'
+	},
 	author: {
-		type: authorSchema,
-		required: true
+		type: String,
+		'default': 'Anonymous'
 	},
 	publisher: {
-		type: userSchema
-	}
+		type: String,
+		required: true,
+		'default': 'Anonymous'
+	},
 	title: {
 		type: String,
 		required: true
@@ -34,13 +34,27 @@ var postSchema = new mongoose.Schema({
 		require: true
 	},
 	excerpt: {
-		type: String,
-		required: true
-	},
-	attachments: {
-		type: String,
+		type: String
 	}
 
 });
 
+
+// author: {
+	// 	type: authorSchema,
+	// 	required: true
+	// },
+	// publisher: {
+	// 	type: userSchema
+	// }
+
 mongoose.model('Post', postSchema);
+
+// date
+// modified
+// status
+// title
+// content
+// excerpt
+// author
+// publisher

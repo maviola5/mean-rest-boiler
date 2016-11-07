@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var dbURI = 'mongodb://localhost/newapp';
+var dbURI = 'mongodb://localhost/mean-blog';
 if(process.env.NODE_ENV === 'production'){
 	dbURI = process.env.MONGOLAB_URI;
 }
@@ -41,3 +41,6 @@ process.on('SIGTERM', function(){
 
 // require('./yourModel');
 // require('./users');
+
+require('./post');
+require('./author');

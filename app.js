@@ -1,3 +1,4 @@
+// require('dotenv').load();
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,6 +6,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var helmet = require('helmet');
+
+require('./api/models/db');
+
 
 var api = require('./api/routes/index');
 var users = require('./api/routes/users');

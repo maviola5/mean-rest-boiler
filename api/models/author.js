@@ -1,10 +1,14 @@
 var mongoose = require('mongoose');
 
 var authorSchema = new mongoose.Schema({
-	_id: Object.id,
-	name: {
-		type: String,
-		required: true
+	firstname: {
+		type: String
+	},
+	middlename: {
+		type: String
+	},
+	lastname: {
+		type: String
 	}
 });
 
