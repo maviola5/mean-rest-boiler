@@ -4,6 +4,11 @@ var router = express.Router();
 var ctrlPost = require('../controllers/post');
 var ctrlAuthor = require('../controllers/author');
 
+router.get('/post/:postid/v/:versionid', ctrlPost.getPostVersion);
+router.post('/post/:postid', ctrlPost.createPostVersion);
+// router.put();
+// router.delete();
+
 router.get('/posts', ctrlPost.getPosts);
 router.get('/post/:postid', ctrlPost.getPost);
 router.post('/post', ctrlPost.createPost);
