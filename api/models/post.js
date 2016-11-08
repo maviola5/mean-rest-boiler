@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 // var User = mongoose.model('User');
 // var Author = mongoose.model('Author');
 
-var postSchema = new mongoose.Schema({
+var postMetaSchema = new mongoose.Schema({
 	date: {
 		type: Date, 
 		'default': Date.now
@@ -36,7 +36,12 @@ var postSchema = new mongoose.Schema({
 	excerpt: {
 		type: String
 	}
+});
 
+var postSchema = new mongoose.Schema({
+	published: postMetaSchema,
+	draft: postMetaSchema,
+	history: [postMetaSchema]
 });
 
 
@@ -58,3 +63,16 @@ mongoose.model('Post', postSchema);
 // excerpt
 // author
 // publisher
+
+
+// {
+//   published: {},
+//   draft: {},
+//   history: {
+//     "1" : {
+//       metadata: <value>,
+//       document: {}
+//     },
+//     ...
+//   }
+// }
