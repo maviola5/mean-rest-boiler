@@ -1,7 +1,12 @@
 var mongoose = require('mongoose');
 
-var postMetaSchema = new mongoose.Schema({
+var postVersionSchema = new mongoose.Schema({
 	status: String,
+	version: Number,
+	created: {
+		type: Date,
+		'default': Date.now
+	},
 	author: {
 		type: String,
 		'default': 'Anonymous'
@@ -17,12 +22,15 @@ var postMetaSchema = new mongoose.Schema({
 	content: {
 		type: String,
 		require: true
-	}
+	},
+	category: String
 });
 
 var postSchema = new mongoose.Schema({
-	versions: [postMetaSchema]
+	published: Date,
+	modified: Date,
+	versions: [postVersionSchema]
 });
 
-mongoose.model('PostMeta', postMetaSchema);
+mongoose.model('PostVersion', postVersionSchema);
 mongoose.model('Post', postSchema);

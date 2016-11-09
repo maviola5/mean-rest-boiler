@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var PostMeta = mongoose.model('PostMeta');
+var PostVersion = mongoose.model('PostVersion');
 var Post = mongoose.model('Post');
 
 var sendJSONresponse = function(res, status, content){
@@ -15,21 +15,26 @@ module.exports.createPost = function(req, res){
 		sendJSONresponse(res, 400, errMessage);
 	}
 
-	var postMeta = new PostMeta();
+	var postVersion = new PostVersion();
 	var post = new Post();
 
-	postMeta.title = req.body.title;
-	postMeta.content = req.body.content;
-	postMeta.status = req.body.status ? req.body.status.toLowerCase() : 'draft';
+	postVersion.title = req.body.title;
+	postVersion.content = req.body.content;
+	postVersion.status = req.body.status ? req.body.status.toLowerCase() : 'draft';
+	postVersion.category = req.body.category ? req.body.category.toLowerCase() : 'general';
+	postVersion.version = 0;
 
 	if(req.body.author){
-		postMeta.author = req.body.author;
+		postVersion.author = req.body.author;
 	}
 	if(req.body.publisher){
-		postMeta.publisher = req.body.publisher;
+		postVersion.publisher = req.body.publisher;
 	}
 
-	post.versions.push(postMeta);
+	post.published = req.body.published ? req.body.published : Date.now();
+	post.modified = req.body.modified ? req.body.modified : Date.now();
+	post.versions.push(postVersion);
+
 
 	Post.create(post, function(err, doc){
 		if(err){
@@ -94,7 +99,7 @@ module.exports.getPostVersion = function(req, res){
 	}
 
 	var post = new Post();
-	var postMeta = new PostMeta();
+	var postVersion = new postVersion();
 
 	var postid = req.params.postid;
 	var versionid = req.params.versionid;
@@ -121,7 +126,7 @@ module.exports.createPostVersion = function(req, res){
 	}
 
 	var id = req.params.postid;
-	var version = new PostMeta();
+	var version = new PostVersion();
 
 	version.title = req.body.title;
 	version.content = req.body.content;
@@ -129,9 +134,27 @@ module.exports.createPostVersion = function(req, res){
 
 	Post.findById(id, function(err, doc){
 
+		if(doc.versions.length === 0){
+			version.version = 0;
+		} else {
+			var inc = doc.versions[doc.versions.length - 1].version + 1;
+			 version.version = inc;
+		}
 		//todo: modify existing published to draft if new version status === 'published'
+		if(version.status === 'published'){
+			doc.versions.forEach((item, index, array) => {
+				if(item.status === 'published'){
+					return item.status = 'draft';
+				}
+			});
+		}
+
+		if(doc.versions.length > 10){
+			doc.versions.shift();
+		}
 
 		doc.versions.push(version);
+		doc.modified = Date.now();
 
 		doc.save(function(err, updatedDoc){
 			sendJSONresponse(res, 200, updatedDoc);
